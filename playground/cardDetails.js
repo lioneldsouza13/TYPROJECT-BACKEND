@@ -1,7 +1,7 @@
 const card_details = require('./../models').card_details;
 
 card_details.bulkCreate([{
-    card_no: "3782 8224 6310 005",
+    card_no: "4444 4444 4444 1234",
     name:"LIONEL DSOUZA",
     cvv:123,
     expiry_date:"01/22",
