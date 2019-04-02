@@ -2265,7 +2265,7 @@ app.get('/api/filter1',(req,res)=>{
 
 
 //---------- Fetch Comments and Ratings for user --
-app.get('/api/fetch-vehicle-comments-and-ratings/:vehicle_id',authenticate,async (req,res)=>{
+app.get('/api/fetch-vehicle-comments-and-ratings/:vehicle_id',async (req,res)=>{
     let vehicle_id = req.params.vehicle_id;
     let comments = [];
     let ratings =[];
@@ -2295,7 +2295,7 @@ app.get('/api/fetch-vehicle-comments-and-ratings/:vehicle_id',authenticate,async
 
 
 //---- accessory ratings ----
-app.post('/api/accessory-rating',authenticate,async(req,res)=>{
+app.post('/api/accessory-rating',async(req,res)=>{
     const Op = Sequelize.Op
     let total_rating=[];
     let avg_rating =null;
@@ -2421,7 +2421,7 @@ app.post('/api/accessory-rating',authenticate,async(req,res)=>{
 })
 
 // ---- adding accessory review -------
-app.post('/api/accessory-review',authenticate,(req,res)=>{
+app.post('/api/accessory-review',(req,res)=>{
     const Op = Sequelize.Op
     accessory_rating.findOne({where:{[Op.and]:[{accessory_id:req.body.accessory_id},{user_id:req.body.user_id}]}}).then((result)=>{
         if(result===null)
@@ -2449,7 +2449,7 @@ app.post('/api/accessory-review',authenticate,(req,res)=>{
 })
 
 // ---------- Fetch all accessory ratings and reviews ---
-app.post('/api/fetch-accessory-ratings-and-reviews',authenticate,async (req,res)=>{
+app.post('/api/fetch-accessory-ratings-and-reviews',async (req,res)=>{
     const Op = Sequelize.Op;
     let details=[];
     let user_id=[];
@@ -2476,7 +2476,7 @@ app.post('/api/fetch-accessory-ratings-and-reviews',authenticate,async (req,res)
 })
 
 // fetch specific accessory review and rating based on user_id and vehicle_id
-app.post('/api/fetch-specific-accessory-rating-and-review-based-on-user-accessory',authenticate,(req,res)=>{
+app.post('/api/fetch-specific-accessory-rating-and-review-based-on-user-accessory',(req,res)=>{
     const Op = Sequelize.Op;
     let details=[];
     accessory_rating.findAll({where:{[Op.and]:[{accessory_id:req.body.accessory_id},{user_id:req.body.user_id}]}}).then((result)=>{
@@ -2492,7 +2492,7 @@ app.post('/api/fetch-specific-accessory-rating-and-review-based-on-user-accessor
 })
 
 // fetch accessory based on accessory id
-app.post('/api/fetch-specific-accessory-rating-and-review',authenticate,(req,res)=>{
+app.post('/api/fetch-specific-accessory-rating-and-review',(req,res)=>{
     let details=[];
     console.log(req.body.accessory_id)
     accessory_rating.findAll({where:{accessory_id:req.body.accessory_id},include:[{model:user},{model:avg_rating_accessory}]}).then((result)=>{
@@ -2509,7 +2509,7 @@ app.post('/api/fetch-specific-accessory-rating-and-review',authenticate,(req,res
 
 
 //fetch accessory rating based on user id
-app.post('/api/fetch-user-accessory-rating',authenticate,(req,res)=>{
+app.post('/api/fetch-user-accessory-rating',(req,res)=>{
     let display=[];
     accessory_rating.findAll({where:{user_id:req.body.user_id}}).then((result)=>{
         for(let i in result)
@@ -2522,7 +2522,7 @@ app.post('/api/fetch-user-accessory-rating',authenticate,(req,res)=>{
     },100)
 })
 
-app.get('/api/get-accessory',authenticate,(req,res)=>{
+app.get('/api/get-accessory',(req,res)=>{
     let accessory_id = req.query.accessory_id;
     let user_id = req.query.user_id;
     const Op =Sequelize.Op;
@@ -2577,7 +2577,7 @@ app.get('/api/get-vehicles',authenticate,async(req,res)=>{
 })
 
 //---- Helpful  and not helpful
-app.post('/api/helpful-not-helpful',authenticate,(req,res)=>{
+app.post('/api/helpful-not-helpful',(req,res)=>{
     const Op = Sequelize.Op;
     let helpful=req.body.helpful;
     let notHelpful=req.body.notHelpful;
@@ -2695,7 +2695,7 @@ app.post('/api/helpful-not-helpful',authenticate,(req,res)=>{
 
 })
 
-app.get('/api/vehicle-helpful',authenticate,(req,res)=>{
+app.get('/api/vehicle-helpful',(req,res)=>{
     let vehicle_id = req.query.vehicle_id;
     let feedback_id = req.query.feedback_id;
     let user_id = req.query.user_id;
@@ -2722,7 +2722,7 @@ app.get('/api/vehicle-helpful',authenticate,(req,res)=>{
 })
 
 //---- Count help vehicle -----
-app.get('/api/helpful-vehicle-count',authenticate,(req,res)=>{
+app.get('/api/helpful-vehicle-count',(req,res)=>{
     const Op = Sequelize.Op;
     let helpful = [];
     let notHelpful = [];
@@ -2752,7 +2752,7 @@ app.get('/api/helpful-vehicle-count',authenticate,(req,res)=>{
 
 //----- Accessory Count ----
 
-app.get('/api/accessory-helpful',authenticate,(req,res)=>{
+app.get('/api/accessory-helpful',(req,res)=>{
     let accessory_id = req.query.accessory_id;
     let feedback_id = req.query.feedback_id;
     let user_id = req.query.user_id;
@@ -2779,7 +2779,7 @@ app.get('/api/accessory-helpful',authenticate,(req,res)=>{
 })
 
 //---- Count helpful accessory -----
-app.get('/api/helpful-accessory-count',authenticate,(req,res)=>{
+app.get('/api/helpful-accessory-count',(req,res)=>{
     const Op = Sequelize.Op;
     let helpful = [];
     let notHelpful = [];
