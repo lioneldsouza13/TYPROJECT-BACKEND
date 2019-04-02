@@ -932,7 +932,7 @@ app.post('/api/update-vehicle-image',authenticate,(req,res)=>{
 
 // ----- Fetch Specific Vehicle Details ----
 
-app.post('/api/fetch-specific-vehicle',authenticate,(req,res)=>{
+app.post('/api/fetch-specific-vehicle',(req,res)=>{
     const Op = Sequelize.Op;
     let vehicle_id= req.body.vehicle_id;
     let user_id=req.body.user_id;
@@ -1296,7 +1296,7 @@ app.post('/api/fetch-accessories',(req,res)=>{
 })
 
 //---- Fetch Specific Accessory
-app.post('/api/fetch-specific-accessory',authenticate,(req,res)=>{
+app.post('/api/fetch-specific-accessory',(req,res)=>{
     accessory.findOne({where:{accessory_id:req.body.accessory_id},include:[{model:accessory_rating},{model:avg_rating_accessory}]}).then((result)=>{
         res.send(result.dataValues)
     })
