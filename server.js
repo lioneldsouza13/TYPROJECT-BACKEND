@@ -1103,7 +1103,7 @@ app.post('/api/fetch-specific-vehicles-based-on-status',authenticate,(req,res)=>
 
 
 //----- fetch all users vehicle except current
-    app.post('/api/fetch-vehicles-except-current-user',authenticate,(req,res)=>{
+    app.post('/api/fetch-vehicles-except-current-user',(req,res)=>{
     const Op = Sequelize.Op
     const user_id = req.body.user_id
     let collection =[]
@@ -1283,7 +1283,7 @@ app.post('/api/confirm-payment',authenticate,(req,res)=>{
 })
 //----- Accessories-----
 //------ Fetch All Accessories
-app.post('/api/fetch-accessories',authenticate,(req,res)=>{
+app.post('/api/fetch-accessories',(req,res)=>{
     let result_array =[];
     accessory.findAll({include:[{model:avg_rating_accessory}]}).then((result)=>{
        for (let i in result)
@@ -2041,7 +2041,7 @@ let sendDetails={
 
 
 //-----filter using raw queries ---
-app.get('/api/filter1',authenticate,(req,res)=>{
+app.get('/api/filter1',(req,res)=>{
     const sequelize = new Sequelize('test','root','root',{
         host:'localhost',
         dialect:'mysql'
@@ -2813,6 +2813,19 @@ app.post('/api/remove-profile-image',authenticate,(req,res)=>{
     }).catch(e=>res.send(e))
 })
 
+app.get('/api/get-rent',authenticate,(req,res)=>{
+    const Op = Sequelize.Op
+    let rent_details=[]
+    let client_id=req.query.client_id;
+    let vehicle_id= req.query.vehicle_id
+    rent.findOne({where:{[Op.and]:[{client_id:client_id},{vehicle_id:vehicle_id}]}}).then((result)=>{
+        rent_details.push(result.dataValues)
+
+    })
+    setTimeout(function () {
+        res.send(rent_details)
+    },1000)
+})
 
 
 //--------------
