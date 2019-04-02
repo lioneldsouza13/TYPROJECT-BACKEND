@@ -2813,6 +2813,19 @@ app.post('/api/remove-profile-image',authenticate,(req,res)=>{
     }).catch(e=>res.send(e))
 })
 
+app.get('/api/get-rent',authenticate,(req,res)=>{
+    const Op = Sequelize.Op
+    let rent_details=[]
+    let client_id=req.query.client_id;
+    let vehicle_id= req.query.vehicle_id
+    rent.findOne({where:{[Op.and]:[{client_id:client_id},{vehicle_id:vehicle_id}]}}).then((result)=>{
+        rent_details.push(result.dataValues)
+
+    })
+    setTimeout(function () {
+        res.send(rent_details)
+    },1000)
+})
 
 
 //--------------
