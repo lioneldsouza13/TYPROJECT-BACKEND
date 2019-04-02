@@ -4,12 +4,12 @@ module.exports = (sequelize, DataTypes) => {
       id: {
           allowNull: false,
           autoIncrement: true,
-          primaryKey: false,
+          primaryKey: true,
           type: DataTypes.INTEGER
       },
     client_id: {
           type:DataTypes.BIGINT,
-        primaryKey: true,
+        primaryKey: false,
     },
     owner_id: {
          type: DataTypes.BIGINT,
