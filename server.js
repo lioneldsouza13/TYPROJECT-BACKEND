@@ -1786,12 +1786,12 @@ app.post('/api/cancel-booking',authenticate,(req,res)=>{
     my_job.cancel();
     vehicle.update({status:"AVAILABLE"},{where:{vehicle_id:req.body.vehicle_id}}).then(()=>{
         card_details.findOne({where:{name:"Bank"}}).then((bank_details)=>{
-            console.log("Bank Funds"+bank_details.dataValues.funds)
-            console.log("after cancel"+bank_details.dataValues.funds - (req.body.deposit - req.body.amount))
-        card_details.update({funds:bank_details.dataValues.funds - (req.body.deposit - req.body.amount)},{where:{name:"Bank"}}).then(()=> {
+
+
+        card_details.update({funds:bank_details.dataValues.funds -  req.body.amount},{where:{name:"Bank"}}).then(()=> {
             card_details.findOne({where: {bank_account_no: req.body.client_bank_account_no}}).then((clientDetails) => {
-                card_details.update({funds: clientDetails.dataValues.funds + req.body.deposit + req.body.amount}, {where: {bank_account_no: req.body.client_bank_account_no}}).then(() => {
-                    console.log("client changes"+ clientDetails.dataValues.funds + req.body.deposit + req.body.amount)
+                card_details.update({funds: clientDetails.dataValues.funds + req.body.amount}, {where: {bank_account_no: req.body.client_bank_account_no}}).then(() => {
+
 
                     vehicle_transaction.update({status:"Booking Cancelled"},{where:{[Op.and]: [{vehicle_id:req.body.vehicle_id}, {user_id: req.body.user_id}, {status:  "Rent Initiated"}]}}).then(()=>{
                         res.send("Booking Cancelled");
