@@ -1728,7 +1728,11 @@ app.post('/api/checkout',authenticate,async (req,res)=>{
 
                 card_details.findOne({where:{bank_account_no:user_details[0].bank_account_no}}).then((bank_details)=>{
                     card_details.update({funds:bank_details.dataValues.funds - total_sum},{where:{bank_account_no:user_details[0].bank_account_no}}).then(()=>{
-                        
+                        card_details.findOne({where:{name:"Developer"}}).then((developer_details)=>{
+                            card_details.update({funds:developer_details.dataValues.funds + total_sum},{where:{name:"Developer"}}).then(()=>{
+                                console.log("Payment Settled")
+                            })
+                        })
                     })
                 })  
 
@@ -1787,7 +1791,7 @@ app.post('/api/cancel-booking',authenticate,(req,res)=>{
                 card_details.update({funds: clientDetails.dataValues.funds + req.body.deposit + req.body.amount}, {where: {bank_account_no: req.body.client_bank_account_no}}).then(() => {
 
 
-                    vehicle_transaction.update({status:"Booking Cancelled"},{where:{[Op.and]: [{vehicle_id:req.body.vehicle_id}, {user_id: req.body.user_id}, {status:  "Rent In Process"}]}}).then(()=>{
+                    vehicle_transaction.update({status:"Booking Cancelled"},{where:{[Op.and]: [{vehicle_id:req.body.vehicle_id}, {user_id: req.body.user_id}, {status:  "Rent Initiated"}]}}).then(()=>{
                         res.send("Booking Cancelled");
                     })
 
