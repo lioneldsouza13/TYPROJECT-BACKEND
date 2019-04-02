@@ -1741,7 +1741,7 @@ app.post('/api/checkout',authenticate,async (req,res)=>{
                     var file = `uploads/${fileName}.pdf`
                     data1 = fs.readFileSync(file);
                     data= data1.toString('base64')
-                    generate_email_attachment(user_details.dataValues.email,"Accessory Purchase","Thank you for Purchasing from Ride Wheelz",fileName,data)
+                    generate_email_attachment(user_details[0].email,"Accessory Purchase","Thank you for Purchasing from Ride Wheelz",fileName,data)
                     fs.exists(`uploads/${fileName}.pdf`, function (exists) {
                         if (exists) {
 
