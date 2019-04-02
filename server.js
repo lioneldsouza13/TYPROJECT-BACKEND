@@ -806,7 +806,7 @@ app.post('/api/rent-now',authenticate,async (req,res)=>{
                                                                                 vehicle_transaction.update({status:"Rent In Process"},{where:{[Op.and]:[{status:"Rent Initiated"},{user_id:user_client_id},{vehicle_id:vehicle_id}]}}).then(()=>{
 
                                                                                 generate_email(user_details[0].email,"Rent Payment Settled","Thank you for renting a vehicle from Ride Wheelz. Your deposit has been returned")
-                                                                               generate_email(owner_details[0],"Rent Payment Settled","Thank you for using Ride Wheelz, your payment has been settled")
+                                                                               generate_email(owner_details[0].email,"Rent Payment Settled","Thank you for using Ride Wheelz, your payment has been settled")
                                                                                 console.log("Payment Settled");
                                                                                 })
                                                                             })
