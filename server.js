@@ -2830,7 +2830,7 @@ app.get('/api/get-rent',authenticate,(req,res)=>{
 
 
 //--- Password Reset
-app.get('/reset/:email',(req,res)=>{
+app.get('/api/reset/:email',(req,res)=>{
     let email=req.params.email
     let token1="";
     var jwtDetails={
@@ -2849,14 +2849,14 @@ app.get('/reset/:email',(req,res)=>{
     });
     setTimeout(function () {
         res.send("Email Sent")
-        generate_email(email,"Reset Password",`Click the following link to reset your password http://localhost:3000/reset/${token1}`)
+        generate_email(email,"Reset Password",`Click the following link to reset your password http://localhost:3000/reset/${token1} or https://ridewheelz.firebaseapp.com/reset/${token1}`)
 
     },100)
 
 
 })
 
-app.get('/verify/:token',(req,res)=>{
+app.get('/api/verify/:token',(req,res)=>{
     let token1= req.params.token
     console.log(token1)
     const decodedToken= jwt.verify(token1,process.env.JWT_SECRET,function(err,token){
@@ -2881,7 +2881,7 @@ app.get('/verify/:token',(req,res)=>{
     )
 })
 
-app.post('/reset-password',(req,res)=>{
+app.post('/api/reset-password',(req,res)=>{
     let storedPassword = req.body.password;
     let saltRounds = 10
     let hashedPassword = "";
