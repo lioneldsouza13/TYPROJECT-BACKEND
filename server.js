@@ -2836,6 +2836,13 @@ app.get('/api/reset/:email',(req,res)=>{
     var jwtDetails={
         email:email
     };
+    user.findOne({where:{email:email}}).then((result)=>{
+        if(result === null)
+        {
+            res.send('User not found')
+            return false
+        }
+
     const jwtCreation= jwt.sign(jwtDetails,process.env.JWT_SECRET,{
         expiresIn: '1h'
     },(err,token)=>{
@@ -2890,12 +2897,7 @@ app.post('/api/reset-password',(req,res)=>{
     //------------------------ hashing password ---------------
     const passwordCreation = bcrypt.hash(storedPassword, saltRounds).then((result) => {
         hashedPassword = result;
-        user.findOne({where:{email:req.body.email}}).then((result)=>{
-            if(result === null)
-            {
-                res.send('User not found')
-                return false
-            }
+
             user.update({password:hashedPassword},{where:{email:req.body.email}}).then((result1)=>{
                 res.send('Password Updated')
             }).catch(e=>res.send(e.message))
