@@ -2828,6 +2828,79 @@ app.get('/api/get-rent',authenticate,(req,res)=>{
 })
 
 
+
+//--- Password Reset
+app.get('/reset/:email',(req,res)=>{
+    let email=req.params.email
+    let token1="";
+    var jwtDetails={
+        email:email
+    };
+    const jwtCreation= jwt.sign(jwtDetails,process.env.JWT_SECRET,{
+        expiresIn: '1h'
+    },(err,token)=>{
+        if(err)
+        {
+            console.log(err)
+            res.send(err.message)
+            return false;
+        }
+        token1=token
+    });
+    setTimeout(function () {
+        res.send("Email Sent")
+        generate_email(email,"Reset Password",`Click the following link to reset your password http://localhost:3000/reset/${token1}`)
+
+    },100)
+
+
+})
+
+app.get('/verify/:token',(req,res)=>{
+    let token1= req.params.token
+    console.log(token1)
+    const decodedToken= jwt.verify(token1,process.env.JWT_SECRET,function(err,token){
+            console.log(token)
+            if(err)
+            {
+                console.log(err)
+                res.send(err.message)
+                return false
+            }
+            if(token!==undefined)
+            {
+
+                let details={
+                    email:token.email,
+                    success:true
+                }
+                res.send(details)
+            }
+
+        }
+    )
+})
+
+app.post('/reset-password',(req,res)=>{
+    let storedPassword = req.body.password;
+    let saltRounds = 10
+    let hashedPassword = "";
+
+    //------------------------ hashing password ---------------
+    const passwordCreation = bcrypt.hash(storedPassword, saltRounds).then((result) => {
+        hashedPassword = result;
+        user.update({password:hashedPassword},{where:{email:req.body.email}}).then(result=>{
+            res.send('Password Updated')
+        })
+
+    })
+
+
+})
+
+
+
+
 //--------------
 app.listen(process.env.PORT,()=>{
     console.log(`Listening on port ${process.env.PORT}`)
