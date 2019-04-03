@@ -23,6 +23,7 @@ const fs = require('fs')
 const pdfInvoice = require('pdf-invoice')
 const blobStream  = require('blob-stream');
 const browserify = require('browserify')
+require('dotenv/config')
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -79,6 +80,75 @@ GrandTotal=100
     },5000)
 
 })
+
+app.get('/reset/:email',(req,res)=>{
+    let email=req.params.email
+    let token1="";
+    var jwtDetails={
+        email:email
+    };
+    const jwtCreation= jwt.sign(jwtDetails,process.env.JWT_SECRET,{
+        expiresIn: '1h'
+    },(err,token)=>{
+        if(err)
+        {
+            console.log(err)
+            res.send(err.message)
+            return false;
+        }
+       token1=token
+    });
+    setTimeout(function () {
+        res.send("Email Sent")
+        generate_email(email,"Reset Password",`Click the following link to reset your password http://localhost:3001/verify/${token1}`)
+
+    },100)
+
+
+})
+
+app.get('/verify/:token',(req,res)=>{
+    let token1= req.params.token
+    console.log(token1)
+    const decodedToken= jwt.verify(token1,process.env.JWT_SECRET,function(err,token){
+        console.log(token)
+        if(err)
+        {
+            console.log(err)
+            res.send(err.message)
+            return false
+        }
+        if(token!==undefined)
+        {
+
+            let details={
+                email:token.email,
+                success:true
+            }
+            res.send(details)
+        }
+
+    }
+    )
+})
+
+app.post('/reset-password',(req,res)=>{
+    let storedPassword = req.body.password;
+    let saltRounds = 10
+    let hashedPassword = "";
+
+        //------------------------ hashing password ---------------
+        const passwordCreation = bcrypt.hash(storedPassword, saltRounds).then((result) => {
+            hashedPassword = result;
+            user.update({password:hashedPassword},{where:{email:req.body.email}}).then(result=>{
+                res.send('Password Updated')
+            })
+
+        })
+
+
+})
+
 
 app.get('/test123',(req,res)=> {
     var file = "uploads/file-1554029972996.pdf"
