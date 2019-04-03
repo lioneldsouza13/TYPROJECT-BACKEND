@@ -2849,6 +2849,7 @@ app.get('/api/reset/:email',(req,res)=>{
     });
     setTimeout(function () {
         res.send("Email Sent")
+        console.log(email)
         generate_email(email,"Reset Password",`Click the following link to reset your password http://localhost:3000/reset/${token1} or https://ridewheelz.firebaseapp.com/reset/${token1}`)
 
     },100)
@@ -2889,9 +2890,17 @@ app.post('/api/reset-password',(req,res)=>{
     //------------------------ hashing password ---------------
     const passwordCreation = bcrypt.hash(storedPassword, saltRounds).then((result) => {
         hashedPassword = result;
-        user.update({password:hashedPassword},{where:{email:req.body.email}}).then(result=>{
-            res.send('Password Updated')
+        user.findOne({where:{email:req.body.email}}).then((result)=>{
+            if(result === null)
+            {
+                res.send('User not found')
+                return false
+            }
+            user.update({password:hashedPassword},{where:{email:req.body.email}}).then((result1)=>{
+                res.send('Password Updated')
+            }).catch(e=>res.send(e.message))
         })
+        
 
     })
 
