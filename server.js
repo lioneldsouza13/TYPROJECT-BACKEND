@@ -340,34 +340,47 @@ app.post('/api/clientImage',(req,res)=>{
 
 //-----Sign Up Route -------------
 app.post('/api/sign-up',async (req,res)=>{
-
-    let hashedPassword='';
     var users = req.body.users;
-
+    let hashedPassword='';
     const saltRounds = 10;
+    user.findOne({where:{email:users.email}}).then((result)=>{
+        if(result !== null)
+        {
+            res.send("Email already exist")
+            return false;
+        }
 
-    //------------------------ hashing password ---------------
-    const passwordCreation=await bcrypt.hash(users.password, saltRounds).then((result) => {
-        hashedPassword = result;
+        //------------------------ hashing password ---------------
+        const passwordCreation= bcrypt.hash(users.password, saltRounds).then((result) => {
+            hashedPassword = result;
+
+        })
+
+        //--------------Storing data in Database ------------------
+        const dataStoring =  user.create({
+            first_name:users.first_name,
+            last_name:users.last_name,
+            phone_number:users.phone_number,
+            DOB:users.DOB,
+            email:users.email,
+            password:hashedPassword
+
+        }).then(result=>{
+            res.send('Data Saved in User Table')
+            console.log("Data Saved")
+        }).catch(e=>
+        {
+            res.status(403).send(e)
+            console.log(e)
+        })
+
+
+
+
 
     })
 
-    //--------------Storing data in Database ------------------
-    const dataStoring = await user.create({
-        first_name:users.first_name,
-        last_name:users.last_name,
-        phone_number:users.phone_number,
-        DOB:users.DOB,
-        email:users.email,
-        password:hashedPassword
 
-    }).then(result=>{
-        res.send('Data Saved in User Table')
-    }).catch(e=>
-    {
-        res.status(403).send(e)
-        console.log(e)
-    })
 
 
 
