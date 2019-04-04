@@ -343,21 +343,16 @@ app.post('/api/sign-up',async (req,res)=>{
     var users = req.body.users;
     let hashedPassword='';
     const saltRounds = 10;
-    user.findOne({where:{email:users.email}}).then((result)=>{
-        if(result !== null)
-        {
-            res.send("Email already exist")
-            return false;
-        }
+
 
         //------------------------ hashing password ---------------
-        const passwordCreation= bcrypt.hash(users.password, saltRounds).then((result) => {
+        const passwordCreation= await bcrypt.hash(users.password, saltRounds).then((result) => {
             hashedPassword = result;
 
         })
 
         //--------------Storing data in Database ------------------
-        const dataStoring =  user.create({
+        const dataStoring = await user.create({
             first_name:users.first_name,
             last_name:users.last_name,
             phone_number:users.phone_number,
@@ -378,7 +373,7 @@ app.post('/api/sign-up',async (req,res)=>{
 
 
 
-    })
+
 
 
 
